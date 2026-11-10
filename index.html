@@ -1,1 +1,49 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BORED Box Giveaway</title><style>body{margin:0;background:#fff0f5;color:#391244;font-family:system-ui;text-align:center}header{padding:25px 12px}h1{font-size:2rem}main{max-width:950px;margin:auto;padding:12px}.board{display:grid;grid-template-columns:repeat(30,1fr);aspect-ratio:30/20;background-image:url('puzzle.png');background-size:100% 100%;border:5px solid #652477;border-radius:8px;overflow:hidden}.piece{background:#53205e;border:1px solid #a77bad;min-width:0;min-height:0;padding:0;cursor:pointer}.piece:disabled{cursor:default}.piece.open{background:transparent;border-color:#ffffff33}.piece:focus-visible{outline:2px solid #fff;z-index:2}form{display:grid;gap:10px;max-width:400px;margin:20px auto}input,button{font:inherit;padding:12px;border-radius:8px;border:1px solid #a77bad}button.primary{background:#622575;color:white}small{display:block;margin:12px}</style></head><body><header><h1>🧩 BORED BOX GIVEAWAY!</h1><p>Reveal a piece of the mystery picture. Win an OG “I'm Bored” Box!</p></header><main><p id="status">Preview mode — no entries are being collected yet.</p><div id="board" class="board" aria-label="750-piece giveaway puzzle"></div><form id="entry"><input name="name" placeholder="Full name" autocomplete="name" required><input name="email" type="email" placeholder="Email address" autocomplete="email" required><label><input type="checkbox" required> I agree to the giveaway rules and privacy notice.</label><button class="primary" type="submit">Preview my entry</button></form><p>Ends December 15, 2026. Facebook follow verification required.</p><small>This is a visual preview only. Entries and flips are not stored or submitted. The live giveaway requires a secure database, entry limits, published rules, and a privacy notice.</small></main><script>const board=document.querySelector('#board');for(let i=0;i<750;i++){const b=document.createElement('button');b.className='piece';b.type='button';b.setAttribute('aria-label','Puzzle piece '+(i+1));b.addEventListener('click',()=>{b.classList.add('open');b.disabled=true});board.append(b)}document.querySelector('#entry').addEventListener('submit',e=>{e.preventDefault();document.querySelector('#status').textContent='Preview only: your details were not saved.'})</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BORED Box Giveaway — Puzzle Preview</title>
+<style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#391244;background:#fff0f5}*{box-sizing:border-box}body{margin:0;text-align:center}header{padding:22px 14px 8px}h1{font-size:clamp(1.7rem,5vw,2.5rem);margin:0 0 8px}p{line-height:1.45}main{max-width:960px;margin:auto;padding:12px 14px 36px}.notice{font-weight:650}.board{display:block;width:100%;height:auto;border:5px solid #652477;border-radius:12px;background:#4e1a63;touch-action:manipulation}.cover{fill:#58216c;stroke:#b18ac3;stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:fill .15s}.cover:hover{fill:#79368d}.cover:focus{outline:none;stroke:#fff;stroke-width:2.2}.cover.revealed{display:none}.count{font-size:.9rem;margin:10px 0}form{display:grid;gap:12px;max-width:420px;margin:24px auto}input:not([type=checkbox]),button.primary{font:inherit;padding:13px;border-radius:9px;border:1px solid #b28abd}input:not([type=checkbox]){width:100%;background:white}button.primary{background:#622575;color:white;cursor:pointer}label{font-size:.95rem;text-align:left;display:flex;gap:8px;align-items:flex-start}label input{margin-top:5px}small{display:block;max-width:700px;margin:18px auto;line-height:1.5}
+</style>
+</head>
+<body>
+<header><h1>🧩 BORED BOX GIVEAWAY!</h1><p>Reveal a piece of the mystery picture. Win an OG “I'm Bored” Box!</p></header>
+<main>
+<p class="notice" id="status">Preview mode — no entries are being collected yet.</p>
+<svg id="board" class="board" viewBox="0 0 1200 800" role="group" aria-label="750-piece interactive jigsaw puzzle preview" xmlns="http://www.w3.org/2000/svg"><image href="puzzle.png" x="0" y="0" width="1200" height="800" preserveAspectRatio="none"/></svg>
+<p class="count" id="count">0 of 750 pieces revealed (preview only)</p>
+<form id="entry"><input name="name" placeholder="Full name" autocomplete="name" required><input name="email" type="email" placeholder="Email address" autocomplete="email" required><label><input type="checkbox" required> I agree to the giveaway rules and privacy notice.</label><button class="primary" type="submit">Preview my entry</button></form>
+<p>Ends December 15, 2026. Facebook follow verification required.</p>
+<small>This is a visual preview only. Entries and flips are not stored or submitted. The live giveaway requires secure server-side entry tracking, a database, published rules, and a privacy notice. Do not share this preview as an active giveaway.</small>
+</main>
+<script>
+(() => {
+const cols=30,rows=25,w=40,h=32,svg=document.getElementById('board'),ns='http://www.w3.org/2000/svg';
+// Each shared edge gets one deterministic tab direction, so neighboring pieces interlock.
+const hash=(a,b,seed)=>((a*73856093)^(b*19349663)^(seed*83492791))>>>0;
+const horizontal=(row,col)=>hash(row,col,1)%2?1:-1; // +1 tab down
+const vertical=(row,col)=>hash(row,col,2)%2?1:-1; // +1 tab right
+function edge(x,y,dx,dy,side){
+ const nx=-dy,ny=dx,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,px=nx/L*side,py=ny/L*side;
+ const at=(t,offset=0)=>[x+dx*t+px*offset,y+dy*t+py*offset];
+ const fmt=p=>p.map(n=>n.toFixed(3)).join(' ');
+ if(!side)return ` L ${fmt(at(1))}`;
+ const depth=L*.23,neck=L*.105;
+ return ` L ${fmt(at(.30))} C ${fmt(at(.37,0))} ${fmt(at(.38,neck*.30))} ${fmt(at(.38,neck))} C ${fmt(at(.30,depth))} ${fmt(at(.39,depth*1.55))} ${fmt(at(.50,depth*1.55))} C ${fmt(at(.61,depth*1.55))} ${fmt(at(.70,depth))} ${fmt(at(.62,neck))} C ${fmt(at(.62,neck*.30))} ${fmt(at(.63,0))} ${fmt(at(.70,0))} L ${fmt(at(1))}`;
+}
+function shape(r,c){const x=c*w,y=r*h;
+ const top=r===0?0:-horizontal(r-1,c),right=c===cols-1?0:vertical(r,c),bottom=r===rows-1?0:horizontal(r,c),left=c===0?0:-vertical(r,c-1);
+ // Clockwise paths: top right down left. Inward/outward normals are set consistently.
+ return `M ${x} ${y}${edge(x,y,w,0,top)}${edge(x+w,y,0,h,right)}${edge(x+w,y+h,-w,0,-bottom)}${edge(x,y+h,0,-h,-left)} Z`;
+}
+let revealed=0;
+for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+ const p=document.createElementNS(ns,'path');p.setAttribute('d',shape(r,c));p.setAttribute('class','cover');p.setAttribute('role','button');p.setAttribute('tabindex','0');p.setAttribute('aria-label',`Reveal puzzle piece ${r*cols+c+1}`);
+ const flip=()=>{if(p.classList.contains('revealed'))return;p.classList.add('revealed');p.setAttribute('tabindex','-1');revealed++;document.getElementById('count').textContent=`${revealed} of 750 pieces revealed (preview only)`};
+ p.addEventListener('click',flip);p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});svg.append(p);
+}
+document.getElementById('entry').addEventListener('submit',e=>{e.preventDefault();document.getElementById('status').textContent='Preview only: your details were not saved.'});
+})();
+</script>
+</body></html>
