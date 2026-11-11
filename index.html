@@ -1,49 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BORED Box Giveaway — Puzzle Preview</title>
-<style>
-:root{font-family:system-ui,-apple-system,sans-serif;color:#391244;background:#fff0f5}*{box-sizing:border-box}body{margin:0;text-align:center}header{padding:22px 14px 8px}h1{font-size:clamp(1.7rem,5vw,2.5rem);margin:0 0 8px}p{line-height:1.45}main{max-width:960px;margin:auto;padding:12px 14px 36px}.notice{font-weight:650}.board{display:block;width:100%;height:auto;border:5px solid #652477;border-radius:12px;background:#4e1a63;touch-action:manipulation}.cover{fill:#58216c;stroke:#b18ac3;stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:fill .15s}.cover:hover{fill:#79368d}.cover:focus{outline:none;stroke:#fff;stroke-width:2.2}.cover.revealed{display:none}.count{font-size:.9rem;margin:10px 0}form{display:grid;gap:12px;max-width:420px;margin:24px auto}input:not([type=checkbox]),button.primary{font:inherit;padding:13px;border-radius:9px;border:1px solid #b28abd}input:not([type=checkbox]){width:100%;background:white}button.primary{background:#622575;color:white;cursor:pointer}label{font-size:.95rem;text-align:left;display:flex;gap:8px;align-items:flex-start}label input{margin-top:5px}small{display:block;max-width:700px;margin:18px auto;line-height:1.5}
-</style>
-</head>
-<body>
-<header><h1>🧩 BORED BOX GIVEAWAY!</h1><p>Reveal a piece of the mystery picture. Win an OG “I'm Bored” Box!</p></header>
-<main>
-<p class="notice" id="status">Preview mode — no entries are being collected yet.</p>
-<svg id="board" class="board" viewBox="0 0 1200 800" role="group" aria-label="750-piece interactive jigsaw puzzle preview" xmlns="http://www.w3.org/2000/svg"><image href="puzzle.png" x="0" y="0" width="1200" height="800" preserveAspectRatio="none"/></svg>
-<p class="count" id="count">0 of 750 pieces revealed (preview only)</p>
-<form id="entry"><input name="name" placeholder="Full name" autocomplete="name" required><input name="email" type="email" placeholder="Email address" autocomplete="email" required><label><input type="checkbox" required> I agree to the giveaway rules and privacy notice.</label><button class="primary" type="submit">Preview my entry</button></form>
-<p>Ends December 15, 2026. Facebook follow verification required.</p>
-<small>This is a visual preview only. Entries and flips are not stored or submitted. The live giveaway requires secure server-side entry tracking, a database, published rules, and a privacy notice. Do not share this preview as an active giveaway.</small>
-</main>
-<script>
-(() => {
-const cols=30,rows=25,w=40,h=32,svg=document.getElementById('board'),ns='http://www.w3.org/2000/svg';
-// Each shared edge gets one deterministic tab direction, so neighboring pieces interlock.
-const hash=(a,b,seed)=>((a*73856093)^(b*19349663)^(seed*83492791))>>>0;
-const horizontal=(row,col)=>hash(row,col,1)%2?1:-1; // +1 tab down
-const vertical=(row,col)=>hash(row,col,2)%2?1:-1; // +1 tab right
-function edge(x,y,dx,dy,side){
- const nx=-dy,ny=dx,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,px=nx/L*side,py=ny/L*side;
- const at=(t,offset=0)=>[x+dx*t+px*offset,y+dy*t+py*offset];
- const fmt=p=>p.map(n=>n.toFixed(3)).join(' ');
- if(!side)return ` L ${fmt(at(1))}`;
- const depth=L*.23,neck=L*.105;
- return ` L ${fmt(at(.30))} C ${fmt(at(.37,0))} ${fmt(at(.38,neck*.30))} ${fmt(at(.38,neck))} C ${fmt(at(.30,depth))} ${fmt(at(.39,depth*1.55))} ${fmt(at(.50,depth*1.55))} C ${fmt(at(.61,depth*1.55))} ${fmt(at(.70,depth))} ${fmt(at(.62,neck))} C ${fmt(at(.62,neck*.30))} ${fmt(at(.63,0))} ${fmt(at(.70,0))} L ${fmt(at(1))}`;
-}
-function shape(r,c){const x=c*w,y=r*h;
- const top=r===0?0:-horizontal(r-1,c),right=c===cols-1?0:vertical(r,c),bottom=r===rows-1?0:horizontal(r,c),left=c===0?0:-vertical(r,c-1);
- // Clockwise paths: top right down left. Inward/outward normals are set consistently.
- return `M ${x} ${y}${edge(x,y,w,0,top)}${edge(x+w,y,0,h,right)}${edge(x+w,y+h,-w,0,-bottom)}${edge(x,y+h,0,-h,-left)} Z`;
-}
-let revealed=0;
-for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
- const p=document.createElementNS(ns,'path');p.setAttribute('d',shape(r,c));p.setAttribute('class','cover');p.setAttribute('role','button');p.setAttribute('tabindex','0');p.setAttribute('aria-label',`Reveal puzzle piece ${r*cols+c+1}`);
- const flip=()=>{if(p.classList.contains('revealed'))return;p.classList.add('revealed');p.setAttribute('tabindex','-1');revealed++;document.getElementById('count').textContent=`${revealed} of 750 pieces revealed (preview only)`};
- p.addEventListener('click',flip);p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});svg.append(p);
-}
-document.getElementById('entry').addEventListener('submit',e=>{e.preventDefault();document.getElementById('status').textContent='Preview only: your details were not saved.'});
-})();
-</script>
-</body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BORED Box Puzzle Giveaway</title><style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#342d39;background:#fff6f0}*{box-sizing:border-box}body{margin:0}header{text-align:center;padding:30px 14px;background:#fbd6d3}h1{font-size:clamp(30px,7vw,54px);margin:0;font-weight:900;letter-spacing:-1px}h2{margin:8px 0}p{line-height:1.5}.wrap{max-width:1100px;margin:auto;padding:18px}.intro{text-align:center}.tag{font-weight:800;color:#a42d69}.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:15px}.stats span{background:white;border-radius:25px;padding:10px 18px;font-weight:700}.board{display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:1px;background:#d29ba9;padding:5px;border:5px solid #ae6984;border-radius:10px;box-shadow:0 8px 20px #8a496033}.piece{aspect-ratio:1;min-width:0;padding:0;position:relative;border:1px solid #a15b7d;background:#f4a6c1;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#683454;font-size:clamp(5px,1vw,10px);font-weight:700;transition:background .2s}.piece:before{content:"";position:absolute;top:-12%;left:37%;width:26%;height:26%;border-radius:50%;background:#f4a6c1;border-top:1px solid #a15b7d;pointer-events:none}.piece:disabled{cursor:default}.piece.revealed{background:#fff1d6;color:#6c4651}.piece.revealed:before{background:#fff1d6}.piece.selected{outline:2px solid #40213e;z-index:2}.hint{text-align:center;font-size:13px}.overlay{position:fixed;inset:0;background:#241523ad;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.overlay.open{display:flex}.dialog{background:#fffaf6;padding:24px;border-radius:18px;max-width:420px;width:100%;box-shadow:0 12px 40px #0004}.dialog label{display:block;margin:12px 0 5px;font-weight:700}.dialog input{width:100%;padding:12px;border:1px solid #a68c9a;border-radius:8px;font-size:16px}button.action{border:0;border-radius:9px;background:#b43e78;color:white;padding:13px 18px;font-size:16px;font-weight:800;cursor:pointer}button.action:disabled{opacity:.55}.actions{display:flex;gap:10px;margin-top:18px}.actions button{flex:1}.secondary{background:#ddd0d7!important;color:#342d39!important}.status{min-height:24px;color:#8b2156;font-weight:650}.foot{text-align:center;font-size:13px;padding:24px;color:#6b5966}a{color:#9a2e68}@media(max-width:600px){.board{gap:0;padding:2px;border-width:3px}.piece{font-size:5px;border-width:.5px}.piece:before{display:none}}
+</style></head><body><header><h1>BORED Box</h1><div class="tag">THE GREAT PUZZLE GIVEAWAY 🧩</div></header><main class="wrap"><section class="intro"><h2>One piece. One chance. One OG I'm Bored Box!</h2><p>Follow BORED Box on Facebook, choose one face-down puzzle piece, and enter your name and email to claim it. We'll verify your Facebook follow before confirming eligibility.</p><p><strong>Ends December 15, 2026 at 11:59 PM Eastern.</strong></p><p><a href="https://www.facebook.com/" target="_blank" rel="noopener">Open Facebook to find BORED Box</a></p></section><div class="stats"><span id="remaining">Loading pieces…</span><span>750 total pieces</span></div><p class="hint">Tap a pink piece to choose your number. Claimed pieces turn cream.</p><div class="board" id="board" aria-label="750-piece giveaway board"></div><p class="status" id="status" role="status"></p><p class="hint">One entry per person. Entries are subject to verification. No purchase necessary. Facebook is not affiliated with this giveaway.</p></main><footer class="foot">BORED Box • Open it. Pick something. Get un-bored.</footer><div class="overlay" id="overlay"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Claim piece <span id="chosen"></span></h2><p>Enter the name you use on Facebook so we can verify your follow.</p><form id="entryForm"><label for="fullName">Facebook name</label><input id="fullName" autocomplete="name" minlength="2" maxlength="150" required><label for="email">Email</label><input id="email" type="email" autocomplete="email" required><div class="actions"><button type="button" class="action secondary" id="cancel">Cancel</button><button type="submit" class="action" id="submit">Claim my piece</button></div><p class="status" id="formStatus" role="status"></p></form></div></div><script>
+'use strict';
+const BASE='https://buwunmxwmymxogwitpql.supabase.co';
+const KEY='sb_publishable_eTYPKABp0VrbRW6J8x7ceA_vQLlvDNO';
+const END=new Date('2026-12-16T00:00:00-05:00');
+const board=document.getElementById('board'),status=document.getElementById('status'),overlay=document.getElementById('overlay');
+let selected=null,claimed=new Set(),ready=false;
+const headers={'apikey':KEY,'Authorization':'Bearer '+KEY};
+function closed(){return Date.now()>=END.getTime()}
+function render(){board.replaceChildren();const frag=document.createDocumentFragment();for(let n=1;n<=750;n++){const b=document.createElement('button');b.type='button';b.className='piece'+(claimed.has(n)?' revealed':'');b.textContent=n;b.title='Piece '+n+(claimed.has(n)?' claimed':' available');b.setAttribute('aria-label',b.title);b.disabled=!ready||claimed.has(n)||closed();b.addEventListener('click',()=>choose(n));frag.appendChild(b)}board.appendChild(frag);document.getElementById('remaining').textContent=(750-claimed.size)+' pieces available';if(closed())status.textContent='This giveaway has ended.'}
+async function load(){ready=false;status.textContent='Loading the puzzle…';render();try{const r=await fetch(BASE+'/rest/v1/puzzle_pieces?select=piece_number,is_revealed&order=piece_number.asc&limit=750',{headers});if(!r.ok)throw Error('Could not load puzzle ('+r.status+'). Check Supabase API access and permissions.');const data=await r.json();if(!Array.isArray(data)||data.length!==750)throw Error('Expected 750 pieces; received '+(data?.length??'unknown')+'.');claimed=new Set(data.filter(x=>x.is_revealed).map(x=>Number(x.piece_number)));ready=true;status.textContent='';render()}catch(e){status.textContent=e.message+' Please contact BORED Box.';render()}}
+function choose(n){if(!ready||claimed.has(n)||closed())return;selected=n;document.getElementById('chosen').textContent='#'+n;document.getElementById('formStatus').textContent='';overlay.classList.add('open');document.getElementById('fullName').focus()}
+function hide(){overlay.classList.remove('open');selected=null}
+document.getElementById('cancel').addEventListener('click',hide);
+document.getElementById('entryForm').addEventListener('submit',async e=>{e.preventDefault();if(selected===null||closed())return;const submit=document.getElementById('submit'),msg=document.getElementById('formStatus');submit.disabled=true;msg.textContent='Submitting…';try{const r=await fetch(BASE+'/rest/v1/rpc/claim_giveaway_piece',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({p_name:document.getElementById('fullName').value.trim(),p_email:document.getElementById('email').value.trim(),p_piece:selected})});const body=await r.text();if(!r.ok)throw Error('Submission failed ('+r.status+'): '+body.slice(0,180));let result;try{result=JSON.parse(body)}catch{result=body}const message=String(result??'');msg.textContent=message;if(/success|claimed|entered|thank you/i.test(message)&&!/already|not |error|invalid/i.test(message)){hide();status.textContent='Entry submitted! Please watch your email for updates.';await load()}else{await load();msg.textContent=message||'Please check your entry and try again.'}}catch(err){msg.textContent=err.message}finally{submit.disabled=false}});
+load();
+</script></body></html>
